@@ -10,18 +10,22 @@ description: Use for analyzing, debugging, or modifying this QMK workspace for t
 3. If a workspace root was found in step 1, also read `<workspace-root>/AGENTS.md` and `<workspace-root>/docs/qmk-context.yaml`.
 4. If the session was started in `qmk_firmware/` or `qmk_userspace/`, inspect the sibling repository when the task may cross the firmware/userspace boundary.
 5. Prefer local checked-out code and local QMK docs inside `qmk_firmware/docs/`. Use official QMK docs only when the local workspace does not settle the question.
-6. Inventory the files actually involved before proposing a change. Search for hook functions, feature flags, and custom keycodes instead of assuming where they live.
-7.   Respect these workspace-specific gotchas:
+6. If the task needs userspace commands or builds, confirm the overlay setup from `docs/qmk-context.yaml` first instead of assuming `user.overlay_dir` is already configured.
+7. Inventory the files actually involved before proposing a change. Search for hook functions, feature flags, custom keycodes, and inherited parent keyboard metadata instead of assuming everything relevant lives in the custom `fleetsing36/` directory.
+8.   Respect these workspace-specific gotchas:
     - `users/fleetsing/fi_autoshift.c` exists but is not compiled by `users/fleetsing/rules.mk`
     - Auto Shift logic currently lives in the active `keymap.c`
+    - `users/fleetsing/config.h` exists and is currently a placeholder
+    - the custom board inherits from `keyboards/bastardkb/charybdis/3x5/info.json`, which still defines a 35-key `LAYOUT` while `fleetsing36/keyboard.json` defines 36 keys
     - Generated `.hex` and `.uf2` files in the userspace repo root are build outputs, not source files
-8. Make the smallest change that cleanly solves the task.
-9.  Verification policy:
+9. Make the smallest change that cleanly solves the task.
+10.  Verification policy:
     - For userspace/overlay problems, start with `qmk userspace-doctor`
     - For normal keymap or board work, prefer `qmk compile -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing`
     - For shared or broad userspace changes, use `qmk userspace-compile -c -p` when practical
     - Run `qmk format-c` on changed C files when appropriate
-10. In the final response, always include:
+    - If the direct compile emits the known inherited 35-vs-36 `LAYOUT` warning, report it as a pre-existing metadata issue unless your change intentionally addressed it
+11. In the final response, always include:
     - what changed
     - why the chosen files were the correct layer
     - what verification command was used or should be used

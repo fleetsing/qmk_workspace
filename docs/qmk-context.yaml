@@ -8,6 +8,7 @@ codex:
 
 workspace:
   root: ~/qmk
+  root_repo: .
   repositories:
     firmware: qmk_firmware
     userspace: qmk_userspace
@@ -41,6 +42,7 @@ userspace:
     name: fleetsing
     path: qmk_userspace/users/fleetsing
     files:
+      - qmk_userspace/users/fleetsing/config.h
       - qmk_userspace/users/fleetsing/fleetsing.h
       - qmk_userspace/users/fleetsing/fleetsing.c
       - qmk_userspace/users/fleetsing/pointing.c
@@ -56,10 +58,12 @@ build_targets:
   - keyboard: bastardkb/charybdis/3x5/fleetsing36
     keymap: fleetsing
     status: active
-    note: This is the primary keymap for this userspace. It is present in qmk.json and has a matching keymap folder in this userspace snapshot.
+    note: This is the primary keymap for this userspace. It is present in qmk.json and has a matching keymap folder in this userspace snapshot. Treat qmk.json as the source of truth even if historical .hex or .uf2 artifacts for other targets exist in the repo root.
 
 verification:
+  overlay_prerequisite: qmk config user.overlay_dir="$(realpath qmk_userspace)"
   primary_compile: qmk compile -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing
+  primary_compile_note: Currently completes with an inherited metadata warning because keyboards/bastardkb/charybdis/3x5/info.json still defines a 35-key LAYOUT while fleetsing36/keyboard.json defines 36 keys.
   userspace_compile: qmk userspace-compile -c -p
   format_changed_c: qmk format-c <changed-files>
 
@@ -80,8 +84,10 @@ gotchas:
   - users/fleetsing/rules.mk does not currently compile fi_autoshift.c.
   - Auto Shift logic currently lives in the active keymap.c.
   - Shared enums and custom keycodes SET_MS_L and SET_MS_R live in users/fleetsing/fleetsing.h.
+  - qmk_userspace/users/fleetsing/config.h exists and is currently only a placeholder.
   - The custom board target is bastardkb/charybdis/3x5/fleetsing36.
-  - In keyboard.json, development_board: elite_c and pin_compatible: elite_c describe Elite-C-compatible pin metadata only. They do not imply that a separate elitec/... keyboard path is active in this workspace.
+  - The custom board inherits from qmk_firmware/keyboards/bastardkb/charybdis/3x5/info.json, which still defines a 35-key LAYOUT while qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/keyboard.json defines 36 physical keys.
+  - "In keyboard.json, development_board: elite_c and pin_compatible: elite_c describe Elite-C-compatible pin metadata only. They do not imply that a separate elitec/... keyboard path is active in this workspace."
   - Actual build behavior for the custom board is controlled by qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/rules.mk, which sets CONVERT_TO = rp2040_ce.
   - Treat development_board and pin_compatible as hardware metadata, not as instructions to switch keyboard targets. Do not infer alternate keyboard paths unless they exist in the checked-out tree and are confirmed by the QMK CLI.
   - Do not edit generated .hex or .uf2 files unless explicitly asked.
