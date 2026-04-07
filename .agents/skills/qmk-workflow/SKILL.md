@@ -13,11 +13,13 @@ description: Use for analyzing, debugging, or modifying this QMK workspace for t
 6. If the task needs userspace commands or builds, confirm the overlay setup from `docs/qmk-context.yaml` first instead of assuming `user.overlay_dir` is already configured.
 7. Inventory the files actually involved before proposing a change. Search for hook functions, feature flags, custom keycodes, and inherited parent keyboard metadata instead of assuming everything relevant lives in the custom `fleetsing36/` directory.
 8.   Respect these workspace-specific gotchas:
-    - Generic userspace hook dispatch lives in `users/fleetsing/fleetsing.c`, with repeat-key handling in `users/fleetsing/repeat.c` and pointing/layer-state handling in `users/fleetsing/pointing.c`
+    - Generic userspace hook dispatch lives in `users/fleetsing/fleetsing.c`, with pointing/layer-state handling in `users/fleetsing/pointing.c`
     - Charybdis 3x5 layout-specific positional aliases, combos, and Auto Shift behavior live under `users/fleetsing/layouts/charybdis_3x5/`
-    - Combo and tap-dance definitions are included into `keymap.c` from `.def` files so QMK keymap introspection can still see `key_combos` and `tap_dance_actions`
+    - Combo definitions are included into `keymap.c` from `users/fleetsing/layouts/charybdis_3x5/combos.def` so QMK keymap introspection can still see `key_combos`
+    - `QK_REP` and `QK_AREP` rely on QMK core repeat-key handling directly; there is no userspace repeat module in the current snapshot
+    - Scroll-side selection in `users/fleetsing/pointing.c` only chooses which sensor motion becomes scroll input; Charybdis firmware remains the source of truth for live DPI and sniping DPI
     - `users/fleetsing/config.h` exists and is currently a placeholder
-    - the custom board inherits from `keyboards/bastardkb/charybdis/3x5/info.json`, which still defines a 35-key `LAYOUT` while `fleetsing36/keyboard.json` defines 36 keys
+    - the inherited parent `keyboards/bastardkb/charybdis/3x5/info.json` metadata has been aligned with the 36-key `fleetsing36/keyboard.json` layout; if a layout-count warning reappears, verify both files before assuming the userspace keymap is wrong
     - Generated `.hex` and `.uf2` files in the userspace repo root are build outputs, not source files
 9. Make the smallest change that cleanly solves the task.
 10.  Verification policy:
@@ -25,7 +27,6 @@ description: Use for analyzing, debugging, or modifying this QMK workspace for t
     - For normal keymap or board work, prefer `qmk compile -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing`
     - For shared or broad userspace changes, use `qmk userspace-compile -c -p` when practical
     - Run `qmk format-c` on changed C files when appropriate
-    - If the direct compile emits the known inherited 35-vs-36 `LAYOUT` warning, report it as a pre-existing metadata issue unless your change intentionally addressed it
 11. In the final response, always include:
     - what changed
     - why the chosen files were the correct layer

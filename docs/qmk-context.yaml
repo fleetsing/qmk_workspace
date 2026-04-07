@@ -48,8 +48,6 @@ userspace:
       - qmk_userspace/users/fleetsing/pointing.c
       - qmk_userspace/users/fleetsing/display.c
       - qmk_userspace/users/fleetsing/haptics.c
-      - qmk_userspace/users/fleetsing/repeat.c
-      - qmk_userspace/users/fleetsing/tap_dance.def
       - qmk_userspace/users/fleetsing/rules.mk
       - qmk_userspace/users/fleetsing/layouts/charybdis_3x5/layout_positions.h
       - qmk_userspace/users/fleetsing/layouts/charybdis_3x5/combos.def
@@ -67,7 +65,7 @@ build_targets:
 verification:
   overlay_prerequisite: qmk config user.overlay_dir="$(realpath qmk_userspace)"
   primary_compile: qmk compile -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing
-  primary_compile_note: Currently completes with an inherited metadata warning because keyboards/bastardkb/charybdis/3x5/info.json still defines a 35-key LAYOUT while fleetsing36/keyboard.json defines 36 keys.
+  primary_compile_note: Currently compiles cleanly. The earlier inherited 35-vs-36 LAYOUT metadata mismatch was fixed by aligning keyboards/bastardkb/charybdis/3x5/info.json with fleetsing36/keyboard.json.
   userspace_compile: qmk userspace-compile -c -p
   format_changed_c: qmk format-c <changed-files>
 
@@ -86,14 +84,16 @@ ownership_rules:
     - layers, combos, tap dance, repeat keys, caps word, display, pointing, and haptics behavior
 
 gotchas:
-  - Generic hook dispatch now lives in qmk_userspace/users/fleetsing/fleetsing.c, with repeat-key handling split into qmk_userspace/users/fleetsing/repeat.c and pointing/layer-state handling in qmk_userspace/users/fleetsing/pointing.c.
+  - Generic hook dispatch now lives in qmk_userspace/users/fleetsing/fleetsing.c, with pointing/layer-state handling in qmk_userspace/users/fleetsing/pointing.c.
   - Charybdis 3x5 layout-specific positional aliases, combos, and Auto Shift behavior now live under qmk_userspace/users/fleetsing/layouts/charybdis_3x5/.
-  - Tap dance definitions live in qmk_userspace/users/fleetsing/tap_dance.def and are included by the keymap so QMK keymap introspection can still see tap_dance_actions.
   - Combo definitions live in qmk_userspace/users/fleetsing/layouts/charybdis_3x5/combos.def and are included by the keymap so QMK keymap introspection can still see key_combos.
   - Shared enums and custom keycodes SET_MS_L and SET_MS_R live in users/fleetsing/fleetsing.h.
+  - Scroll-side selection is userspace-managed in users/fleetsing/pointing.c and only determines which side's motion is converted into scroll reports. Sensor DPI remains owned by the Charybdis firmware keycodes and config.
+  - QK_REP and QK_AREP use QMK core repeat-key handling directly; there is no userspace repeat module in the current snapshot.
+  - There is no active tap-dance definition in the current keymap snapshot.
   - qmk_userspace/users/fleetsing/config.h exists and is currently only a placeholder.
   - The custom board target is bastardkb/charybdis/3x5/fleetsing36.
-  - The custom board inherits from qmk_firmware/keyboards/bastardkb/charybdis/3x5/info.json, which still defines a 35-key LAYOUT while qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/keyboard.json defines 36 physical keys.
+  - The inherited parent layout metadata in qmk_firmware/keyboards/bastardkb/charybdis/3x5/info.json has been aligned with the 36-key custom board layout. If a future layout-count warning appears, verify both inherited and custom keyboard metadata before assuming the userspace keymap is wrong.
   - "In keyboard.json, development_board: elite_c and pin_compatible: elite_c describe Elite-C-compatible pin metadata only. They do not imply that a separate elitec/... keyboard path is active in this workspace."
   - Actual build behavior for the custom board is controlled by qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/rules.mk, which sets CONVERT_TO = rp2040_ce.
   - Treat development_board and pin_compatible as hardware metadata, not as instructions to switch keyboard targets. Do not infer alternate keyboard paths unless they exist in the checked-out tree and are confirmed by the QMK CLI.
