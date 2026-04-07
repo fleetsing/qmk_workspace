@@ -13,8 +13,8 @@ description: Use for analyzing, debugging, or modifying this QMK workspace for t
 6. If the task needs userspace commands or builds, confirm the overlay setup from `docs/qmk-context.yaml` first instead of assuming `user.overlay_dir` is already configured.
 7. Inventory the files actually involved before proposing a change. Search for hook functions, feature flags, custom keycodes, and inherited parent keyboard metadata instead of assuming everything relevant lives in the custom `fleetsing36/` directory.
 8.   Respect these workspace-specific gotchas:
-    - `users/fleetsing/fi_autoshift.c` exists but is not compiled by `users/fleetsing/rules.mk`
-    - Auto Shift logic currently lives in the active `keymap.c`
+    - Auto Shift behavior lives in `users/fleetsing/fi_autoshift.c` and is compiled by `users/fleetsing/rules.mk`
+    - `users/fleetsing/layout_positions.h` provides the shared positional aliases used by the keymap and shared userspace features such as Auto Shift
     - `users/fleetsing/config.h` exists and is currently a placeholder
     - the custom board inherits from `keyboards/bastardkb/charybdis/3x5/info.json`, which still defines a 35-key `LAYOUT` while `fleetsing36/keyboard.json` defines 36 keys
     - Generated `.hex` and `.uf2` files in the userspace repo root are build outputs, not source files
