@@ -80,6 +80,7 @@ Typical examples:
 - OLED, pointing, haptics, and other personal feature logic
 - Keymap-level `config.h` and `rules.mk`
 - Reusable code in `users/fleetsing/`
+- Layout-specific userspace modules in `users/fleetsing/layouts/`
 
 For the exact current file inventory, generated-artifact policy, and workspace gotchas, read `docs/qmk-context.yaml` before editing.
 

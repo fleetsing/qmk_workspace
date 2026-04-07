@@ -48,9 +48,12 @@ userspace:
       - qmk_userspace/users/fleetsing/pointing.c
       - qmk_userspace/users/fleetsing/display.c
       - qmk_userspace/users/fleetsing/haptics.c
-      - qmk_userspace/users/fleetsing/fi_autoshift.c
+      - qmk_userspace/users/fleetsing/repeat.c
+      - qmk_userspace/users/fleetsing/tap_dance.def
       - qmk_userspace/users/fleetsing/rules.mk
-      - qmk_userspace/users/fleetsing/layout_positions.h
+      - qmk_userspace/users/fleetsing/layouts/charybdis_3x5/layout_positions.h
+      - qmk_userspace/users/fleetsing/layouts/charybdis_3x5/combos.def
+      - qmk_userspace/users/fleetsing/layouts/charybdis_3x5/fi_autoshift.c
   generated_artifacts:
     - qmk_userspace/*.hex
     - qmk_userspace/*.uf2
@@ -78,12 +81,15 @@ ownership_rules:
   userspace:
     - keymap.c
     - keymap config.h and rules.mk
-    - shared features under users/fleetsing
+    - shared hooks and helpers under users/fleetsing
+    - layout-specific userspace modules under users/fleetsing/layouts/
     - layers, combos, tap dance, repeat keys, caps word, display, pointing, and haptics behavior
 
 gotchas:
-  - Auto Shift behavior now lives in qmk_userspace/users/fleetsing/fi_autoshift.c and is compiled via qmk_userspace/users/fleetsing/rules.mk.
-  - qmk_userspace/users/fleetsing/layout_positions.h provides the shared positional aliases used by the keymap and shared userspace features such as Auto Shift.
+  - Generic hook dispatch now lives in qmk_userspace/users/fleetsing/fleetsing.c, with repeat-key handling split into qmk_userspace/users/fleetsing/repeat.c and pointing/layer-state handling in qmk_userspace/users/fleetsing/pointing.c.
+  - Charybdis 3x5 layout-specific positional aliases, combos, and Auto Shift behavior now live under qmk_userspace/users/fleetsing/layouts/charybdis_3x5/.
+  - Tap dance definitions live in qmk_userspace/users/fleetsing/tap_dance.def and are included by the keymap so QMK keymap introspection can still see tap_dance_actions.
+  - Combo definitions live in qmk_userspace/users/fleetsing/layouts/charybdis_3x5/combos.def and are included by the keymap so QMK keymap introspection can still see key_combos.
   - Shared enums and custom keycodes SET_MS_L and SET_MS_R live in users/fleetsing/fleetsing.h.
   - qmk_userspace/users/fleetsing/config.h exists and is currently only a placeholder.
   - The custom board target is bastardkb/charybdis/3x5/fleetsing36.
