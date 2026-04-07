@@ -1,0 +1,28 @@
+---
+name: qmk-workflow
+description: Use for analyzing, debugging, or modifying this QMK workspace for the fleetsing Charybdis 3x5 setup. Trigger for tasks about keymaps, userspace features, custom keyboard definitions, build targets, compile failures, feature placement, or deciding whether a change belongs in qmk_firmware or qmk_userspace.
+---
+
+1. Identify the workspace layout before doing anything else.
+    - If the parent directory contains `AGENTS.md`, `docs/qmk-context.yaml`, `qmk_firmware/`, and `qmk_userspace/`, treat that parent as the workspace root.
+    - Otherwise, work with the current repository as the available scope.
+2. Read the current repository's local `AGENTS.md` if present.
+3. If a workspace root was found in step 1, also read `<workspace-root>/AGENTS.md` and `<workspace-root>/docs/qmk-context.yaml`.
+4. If the session was started in `qmk_firmware/` or `qmk_userspace/`, inspect the sibling repository when the task may cross the firmware/userspace boundary.
+5. Prefer local checked-out code and local QMK docs inside `qmk_firmware/docs/`. Use official QMK docs only when the local workspace does not settle the question.
+6. Inventory the files actually involved before proposing a change. Search for hook functions, feature flags, and custom keycodes instead of assuming where they live.
+7.   Respect these workspace-specific gotchas:
+    - `users/fleetsing/fi_autoshift.c` exists but is not compiled by `users/fleetsing/rules.mk`
+    - Auto Shift logic currently lives in the active `keymap.c`
+    - Generated `.hex` and `.uf2` files in the userspace repo root are build outputs, not source files
+8. Make the smallest change that cleanly solves the task.
+9.  Verification policy:
+    - For userspace/overlay problems, start with `qmk userspace-doctor`
+    - For normal keymap or board work, prefer `qmk compile -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing`
+    - For shared or broad userspace changes, use `qmk userspace-compile -c -p` when practical
+    - Run `qmk format-c` on changed C files when appropriate
+10. In the final response, always include:
+    - what changed
+    - why the chosen files were the correct layer
+    - what verification command was used or should be used
+    - any stale or ambiguous workspace details discovered during the task

@@ -1,0 +1,4 @@
+/qmk_firmware/
+/qmk_userspace/
+.DS_Store
+Thumbs.db

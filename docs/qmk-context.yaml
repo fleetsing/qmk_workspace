@@ -1,0 +1,94 @@
+codex:
+  launch_commands:
+    userspace: codex -C ~/qmk/qmk_userspace --add-dir ~/qmk
+    firmware: codex -C ~/qmk/qmk_firmware --add-dir ~/qmk
+  notes:
+    - Start in the repo you expect to edit most.
+    - The parent workspace is granted with --add-dir so Codex can also read and update workspace metadata and the sibling repo.
+
+workspace:
+  root: ~/qmk
+  repositories:
+    firmware: qmk_firmware
+    userspace: qmk_userspace
+preferred_launch_directory: repo-under-edit
+
+overlay:
+  userspace_repo: qmk_userspace
+  configure_command: qmk config user.overlay_dir="$(realpath qmk_userspace)"
+  health_check: qmk userspace-doctor
+
+custom_board:
+  keyboard: bastardkb/charybdis/3x5/fleetsing36
+  firmware_path: qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36
+  firmware_files:
+    - qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/config.h
+    - qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/keyboard.json
+    - qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/rules.mk
+
+userspace:
+  repo_path: qmk_userspace
+  qmk_json: qmk_userspace/qmk.json
+  keymap:
+    keyboard: bastardkb/charybdis/3x5/fleetsing36
+    keymap: fleetsing
+    path: qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing
+    files:
+      - qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing/keymap.c
+      - qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing/config.h
+      - qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing/rules.mk
+  shared_user:
+    name: fleetsing
+    path: qmk_userspace/users/fleetsing
+    files:
+      - qmk_userspace/users/fleetsing/fleetsing.h
+      - qmk_userspace/users/fleetsing/fleetsing.c
+      - qmk_userspace/users/fleetsing/pointing.c
+      - qmk_userspace/users/fleetsing/display.c
+      - qmk_userspace/users/fleetsing/haptics.c
+      - qmk_userspace/users/fleetsing/fi_autoshift.c
+      - qmk_userspace/users/fleetsing/rules.mk
+  generated_artifacts:
+    - qmk_userspace/*.hex
+    - qmk_userspace/*.uf2
+
+build_targets:
+  - keyboard: bastardkb/charybdis/3x5/fleetsing36
+    keymap: fleetsing
+    status: active
+    note: This is the primary keymap for this userspace. It is present in qmk.json and has a matching keymap folder in this userspace snapshot.
+
+verification:
+  primary_compile: qmk compile -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing
+  userspace_compile: qmk userspace-compile -c -p
+  format_changed_c: qmk format-c <changed-files>
+
+ownership_rules:
+  firmware:
+    - keyboard.json
+    - config.h
+    - rules.mk
+    - matrix, pin, split transport, and board conversion details
+    - hardware-specific definitions tied to the custom board
+  userspace:
+    - keymap.c
+    - keymap config.h and rules.mk
+    - shared features under users/fleetsing
+    - layers, combos, tap dance, repeat keys, caps word, display, pointing, and haptics behavior
+
+gotchas:
+  - users/fleetsing/rules.mk does not currently compile fi_autoshift.c.
+  - Auto Shift logic currently lives in the active keymap.c.
+  - Shared enums and custom keycodes SET_MS_L and SET_MS_R live in users/fleetsing/fleetsing.h.
+  - The custom board target is bastardkb/charybdis/3x5/fleetsing36.
+  - In keyboard.json, development_board: elite_c and pin_compatible: elite_c describe Elite-C-compatible pin metadata only. They do not imply that a separate elitec/... keyboard path is active in this workspace.
+  - Actual build behavior for the custom board is controlled by qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/rules.mk, which sets CONVERT_TO = rp2040_ce.
+  - Treat development_board and pin_compatible as hardware metadata, not as instructions to switch keyboard targets. Do not infer alternate keyboard paths unless they exist in the checked-out tree and are confirmed by the QMK CLI.
+  - Do not edit generated .hex or .uf2 files unless explicitly asked.
+  - Avoid moving existing settings between keyboard.json, config.h, and rules.mk unless the task specifically calls for it.
+
+local_doc_priority:
+  - qmk_firmware/docs/
+  - qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/
+  - qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing/
+  - qmk_userspace/users/fleetsing/
