@@ -22,6 +22,9 @@ overlay:
 custom_board:
   keyboard: bastardkb/charybdis/3x5/fleetsing36
   firmware_path: qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36
+  intent:
+    - Keep custom firmware changes under the fleetsing36 directory whenever practical.
+    - Treat parent bastardkb/charybdis files as upstream-like; only touch them for fixes that cannot be cleanly contained in the custom board or userspace.
   firmware_files:
     - qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/config.h
     - qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/keyboard.json
@@ -76,6 +79,7 @@ ownership_rules:
     - rules.mk
     - matrix, pin, split transport, and board conversion details
     - hardware-specific definitions tied to the custom board
+    - prefer containing custom firmware behavior in qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/ before changing parent bastardkb/charybdis files
   userspace:
     - keymap.c
     - keymap config.h and rules.mk
@@ -94,6 +98,8 @@ gotchas:
   - qmk_userspace/users/fleetsing/config.h exists and is currently only a placeholder.
   - The custom board target is bastardkb/charybdis/3x5/fleetsing36.
   - The inherited parent layout metadata in qmk_firmware/keyboards/bastardkb/charybdis/3x5/info.json has been aligned with the 36-key custom board layout. If a future layout-count warning appears, verify both inherited and custom keyboard metadata before assuming the userspace keymap is wrong.
+  - The current parent-file footprint is intentionally small: qmk_firmware/keyboards/bastardkb/charybdis/3x5/info.json has a layout metadata fix for the extra thumb key, and qmk_firmware/keyboards/bastardkb/charybdis/charybdis.c reapplies CPI after synced config updates so sniping/drag-scroll state affects the receiving half.
+  - When working on pointer behavior, first try userspace or qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/. Only expand parent-file edits when the required hook is not exposed from the custom board layer.
   - "In keyboard.json, development_board: elite_c and pin_compatible: elite_c describe Elite-C-compatible pin metadata only. They do not imply that a separate elitec/... keyboard path is active in this workspace."
   - Actual build behavior for the custom board is controlled by qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/rules.mk, which sets CONVERT_TO = rp2040_ce.
   - Treat development_board and pin_compatible as hardware metadata, not as instructions to switch keyboard targets. Do not infer alternate keyboard paths unless they exist in the checked-out tree and are confirmed by the QMK CLI.

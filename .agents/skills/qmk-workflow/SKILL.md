@@ -20,6 +20,8 @@ description: Use for analyzing, debugging, or modifying this QMK workspace for t
     - Scroll-side selection in `users/fleetsing/pointing.c` only chooses which sensor motion becomes scroll input; Charybdis firmware remains the source of truth for live DPI and sniping DPI
     - `users/fleetsing/config.h` exists and is currently a placeholder
     - the inherited parent `keyboards/bastardkb/charybdis/3x5/info.json` metadata has been aligned with the 36-key `fleetsing36/keyboard.json` layout; if a layout-count warning reappears, verify both files before assuming the userspace keymap is wrong
+    - Prefer keeping firmware changes inside `keyboards/bastardkb/charybdis/3x5/fleetsing36/`; treat parent `keyboards/bastardkb/charybdis/` files as upstream-like and only change them for small fixes that cannot be cleanly contained in the custom board or userspace
+    - The current intentional parent-file diffs are limited to the 36-key layout metadata fix in `keyboards/bastardkb/charybdis/3x5/info.json` and the CPI reapply after config sync in `keyboards/bastardkb/charybdis/charybdis.c`
     - Generated `.hex` and `.uf2` files in the userspace repo root are build outputs, not source files
 9. Make the smallest change that cleanly solves the task.
 10.  Verification policy:
