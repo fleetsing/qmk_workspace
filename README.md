@@ -1,21 +1,74 @@
-# QMK workspace metadata
+# QMK Workspace Metadata
 
-This repository contains the workspace-level metadata for my QMK environment. It
-is intentionally separate from the actual code repositories and only tracks root-level
-instructions, Codex context, helper scripts, and similar workspace files.
+This repository is the outer workspace for a split QMK setup built around a
+custom Charybdis Nano 36-key board and a separate external userspace.
 
-The firmware and userspace repositories are cloned separately into this workspace
-as `./qmk_firmware/` and `./qmk_userspace/`. They are managed as independent Git
-repositories with their own remotes and history.
+It does not hold the primary firmware or keymap history itself. Instead, it
+tracks the workspace-level material that ties the two code repositories
+together:
 
-The canonical Codex skill for this workspace is located at `./.agents/skills/qmk-workflow/`.
+- shared workspace documentation
+- Codex and agent instructions
+- canonical mutable workspace facts
+- pinned references to the paired firmware and userspace revisions
 
-To set up the workpsace, follow these steps:
+The code repositories live alongside this repo as sibling directories:
 
-1. clone the root metadata repo to ~/qmk
-2. clone qmk_firmware and qmk_userspace into the two child directories
-3. recreate the ~/.gents/skills/qmk-workflow symlink
-4. run qmk config user.overlay_dir=...
-5. run qmk userspace-doctor
-The outer repo backs up the Codex context; the inner repos back up the code;
-and docs/repo-refs.txt can pin the exact combination you were using when needed.
+- `./qmk_firmware/`
+- `./qmk_userspace/`
+
+## What To Read First
+
+- `AGENTS.md`
+  Workspace policy, repository ownership, and editing expectations.
+- `docs/qmk-context.yaml`
+  Canonical mutable facts for the current workspace: active targets, paths,
+  verification commands, and gotchas.
+- `docs/repo-refs.txt`
+  Pinned references for the matching firmware/userspace repository pair.
+
+## Current Active Target
+
+- Keyboard: `bastardkb/charybdis/3x5/fleetsing36`
+- Keymap: `fleetsing`
+- Primary compile command:
+  `qmk compile -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing`
+
+## Workspace Layout
+
+- `qmk_firmware/`
+  Near-upstream QMK fork plus the custom board definition.
+- `qmk_userspace/`
+  External userspace repo containing the active keymap and shared personal
+  logic.
+- `.agents/skills/qmk-workflow/`
+  Canonical local skill for workspace-specific QMK work.
+
+## Codex Launch Commands
+
+Launch Codex from the repository you expect to edit most, while also granting
+the parent workspace so it can read and update shared metadata.
+
+- Userspace-first:
+  `codex -C ~/qmk/qmk_userspace --add-dir ~/qmk`
+- Firmware-first:
+  `codex -C ~/qmk/qmk_firmware --add-dir ~/qmk`
+
+## Setup
+
+1. Clone this workspace metadata repository to `~/qmk`.
+2. Clone the firmware and userspace repositories into `~/qmk/qmk_firmware` and
+   `~/qmk/qmk_userspace`.
+3. Ensure the canonical QMK workflow skill is available at
+   `~/.agents/skills/qmk-workflow`.
+4. Configure the QMK external userspace path:
+   `qmk config user.overlay_dir="$(realpath qmk_userspace)"`
+5. Run the workspace health check:
+   `qmk userspace-doctor`
+
+## Notes
+
+- Treat `docs/qmk-context.yaml` as the source of truth for mutable workspace
+  facts.
+- Historical `.hex` and `.uf2` files may exist in `qmk_userspace/`, but they
+  are generated artifacts rather than the source of truth for active targets.
