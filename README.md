@@ -17,6 +17,15 @@ The code repositories live alongside this repo as sibling directories:
 - `./qmk_firmware/`
 - `./qmk_userspace/`
 
+## Repository Links
+
+- Workspace metadata repo:
+  <https://github.com/fleetsing/qmk_workspace>
+- Userspace repo:
+  <https://github.com/fleetsing/qmk_userspace>
+- Firmware repo:
+  <https://github.com/fleetsing/qmk_firmware>
+
 ## What To Read First
 
 - `AGENTS.md`
@@ -44,6 +53,15 @@ The code repositories live alongside this repo as sibling directories:
 - `.agents/skills/qmk-workflow/`
   Canonical local skill for workspace-specific QMK work.
 
+Taken together, the three repositories describe the full setup:
+
+- `qmk_workspace` explains how the workspace is assembled and how the two code
+  repositories relate to each other
+- `qmk_userspace` contains the active keymap, shared user logic, and
+  keyboard-facing behavior docs
+- `qmk_firmware` contains the custom board definition and hardware-oriented QMK
+  changes
+
 ## Codex Launch Commands
 
 Launch Codex from the repository you expect to edit most, while also granting
@@ -53,6 +71,20 @@ the parent workspace so it can read and update shared metadata.
   `codex -C ~/qmk/qmk_userspace --add-dir ~/qmk`
 - Firmware-first:
   `codex -C ~/qmk/qmk_firmware --add-dir ~/qmk`
+
+## Workspace Helpers
+
+- `scripts/status-all.sh`
+  Show `git status -sb` in the workspace, firmware repo, and userspace repo.
+- `scripts/qgit`
+  Run the same `git` command across all three repositories.
+
+Examples:
+
+- `scripts/qgit status -sb`
+- `scripts/qgit --changed add .`
+- `scripts/qgit --changed commit -m "Update docs"`
+- `scripts/qgit --changed push`
 
 ## Setup
 

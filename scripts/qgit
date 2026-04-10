@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+repos=(
+  "$ROOT"
+  "$ROOT/qmk_firmware"
+  "$ROOT/qmk_userspace"
+)
+
+usage() {
+  cat <<'EOF'
+Usage:
+  scripts/qgit [--changed] <git-args...>
+
+Runs the same git command in the workspace repo, qmk_firmware, and
+qmk_userspace.
+
+Options:
+  --changed   Only run in repositories with tracked, staged, or untracked changes.
+  -h, --help  Show this help.
+
+Examples:
+  scripts/qgit status -sb
+  scripts/qgit --changed add .
+  scripts/qgit --changed commit -m "Update docs"
+  scripts/qgit --changed push
+EOF
+}
+
+repo_has_changes() {
+  local repo="$1"
+
+  if ! git -C "$repo" diff --quiet; then
+    return 0
+  fi
+
+  if ! git -C "$repo" diff --cached --quiet; then
+    return 0
+  fi
+
+  if [[ -n "$(git -C "$repo" ls-files --others --exclude-standard)" ]]; then
+    return 0
+  fi
+
+  return 1
+}
+
+changed_only=false
+
+while (($# > 0)); do
+  case "$1" in
+    --changed)
+      changed_only=true
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    --)
+      shift
+      break
+      ;;
+    -*)
+      break
+      ;;
+    *)
+      break
+      ;;
+  esac
+done
+
+if (($# == 0)); then
+  usage
+  exit 1
+fi
+
+failures=0
+ran_any=false
+
+for repo in "${repos[@]}"; do
+  if $changed_only && ! repo_has_changes "$repo"; then
+    printf '\n==> %s\n' "$repo"
+    printf 'Skipping clean repository.\n'
+    continue
+  fi
+
+  ran_any=true
+  printf '\n==> %s\n' "$repo"
+
+  if ! git -C "$repo" "$@"; then
+    failures=$((failures + 1))
+  fi
+done
+
+if ! $ran_any; then
+  printf 'No repositories matched.\n' >&2
+  exit 1
+fi
+
+if ((failures > 0)); then
+  printf '\nqgit: %d repository command(s) failed.\n' "$failures" >&2
+  exit 1
+fi

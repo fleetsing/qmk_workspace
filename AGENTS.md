@@ -49,6 +49,7 @@ Use sources in this order:
 4. Other web sources only when necessary.
 
 Do not rely on memory or random old forum/blog snippets when local code or official docs can answer the question.
+If local README files include GitHub links to sibling repositories or workspace mirrors, treat those links as human-facing context only. Do not follow them when the relevant repository is already checked out locally in this workspace, because the local checkout is expected to be newer and is the source of truth for active work.
 For custom board work, inspect inherited parent files such as `qmk_firmware/keyboards/bastardkb/charybdis/3x5/info.json` when behavior or metadata does not line up with the custom `fleetsing36/` directory alone.
 
 ## Repository ownership rules
