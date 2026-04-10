@@ -97,6 +97,8 @@ gotchas:
   - There is no active tap-dance definition in the current keymap snapshot.
   - qmk_userspace/users/fleetsing/config.h exists and is currently only a placeholder.
   - The custom board target is bastardkb/charybdis/3x5/fleetsing36.
+  - qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/config.h now enables EE_HANDS, so physical left/right identity is persistent per half instead of following the USB side.
+  - After enabling EE_HANDS on this board, flash the halves with side-specific handedness once: use `qmk flash -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing -bl uf2-split-left` for the left half and `... -bl uf2-split-right` for the right half.
   - The inherited parent layout metadata in qmk_firmware/keyboards/bastardkb/charybdis/3x5/info.json has been aligned with the 36-key custom board layout. If a future layout-count warning appears, verify both inherited and custom keyboard metadata before assuming the userspace keymap is wrong.
   - The current parent-file footprint is intentionally small: qmk_firmware/keyboards/bastardkb/charybdis/3x5/info.json has a layout metadata fix for the extra thumb key, and qmk_firmware/keyboards/bastardkb/charybdis/charybdis.c reapplies CPI after synced config updates so sniping/drag-scroll state affects the receiving half.
   - When working on pointer behavior, first try userspace or qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/. Only expand parent-file edits when the required hook is not exposed from the custom board layer.
