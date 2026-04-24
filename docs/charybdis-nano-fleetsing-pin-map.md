@@ -234,6 +234,8 @@ These pins are inherited from the `QMK_PM2040` board defaults, not explicitly re
 The current working replacement OLED configuration is:
 
 - electrical interface: I2C, 4-pin modules labeled `GND VCC SCL SDA`
+- purchase listing used for this working batch:
+  - <https://www.aliexpress.com/item/1005005004747839.html>
 - QMK controller selection: `OLED_IC_SSD1312`
 - QMK geometry: `OLED_DISPLAY_128X64`
 - per-half keymap rotation:
@@ -256,6 +258,9 @@ Practical implication:
   not the right configuration
 - if you use the newer replacement batch, the generic upstream QMK SSD1306 /
   SH1106 / SH1107 paths are not sufficient on their own
+- similar-looking 4-pin OLEDs may still behave differently, so treat the
+  listing above as the known-good reference batch rather than assuming all
+  `SSD1312` listings are interchangeable
 
 ### Final SSD1312 firmware fix
 
