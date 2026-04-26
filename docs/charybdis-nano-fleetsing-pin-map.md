@@ -337,9 +337,9 @@ The current userspace treats it as:
 - direct GPIO input
 - active low
 - internal pull-up enabled
-- base-layer test action: `Enter`
+- no assigned key action while the hardware path is prone to phantom clicks
 
-That means future mods should assume `B2` is already claimed unless the knob press is moved again.
+That means future mods should assume `B2` is already claimed and pulled up unless the knob press is moved again.
 
 ## Historical mod progression
 
