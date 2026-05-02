@@ -68,7 +68,7 @@ build_targets:
 verification:
   overlay_prerequisite: qmk config user.overlay_dir="$(realpath qmk_userspace)"
   primary_compile: qmk compile -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing
-  primary_compile_note: Currently compiles cleanly. The earlier inherited 35-vs-36 LAYOUT metadata mismatch was fixed by aligning keyboards/bastardkb/charybdis/3x5/info.json with fleetsing36/keyboard.json.
+  primary_compile_note: Currently compiles successfully without the previous RGB Matrix metadata warning; the shared Charybdis 3x5 parent no longer advertises RGB Matrix, stock 3x5 RGB metadata lives in the elitec/blackpill board files, and fleetsing36 keeps RGB Matrix disabled in its custom board metadata because no LEDs are installed.
   userspace_compile: qmk userspace-compile -c -p
   format_changed_c: qmk format-c <changed-files>
 
@@ -94,20 +94,21 @@ gotchas:
   - Shared enums and custom keycodes SET_MS_L and SET_MS_R live in users/fleetsing/fleetsing.h.
   - Thumb holds currently map L43 and R43 to Navigation, L41 to Numbers, R42 to Function, and R41 to Media.
   - Holding both Navigation thumbs, L43 + R43, promotes to Symbols through userspace physical-thumb tracking; holding L41 + R41 promotes to Macro through the Numbers + Media tri-layer.
-  - L33 and R33 are transparent scroll-hold layers. Holding either key enables Charybdis drag-scroll from users/fleetsing/pointing.c.
+  - Navigation layer enables Charybdis drag-scroll from users/fleetsing/pointing.c. L33 and R33 are plain M/Ä on the base layer; Auto Mouse exposes right-hand one-handed pointer controls with R31/dot as right click, R32/comma as left click, and R33/Ä as drag-scroll hold.
   - Vertical drag-scroll is inverted with CHARYBDIS_DRAGSCROLL_REVERSE_Y in the keymap config so physical trackball up scrolls up and physical down scrolls down.
   - The left encoder sends volume up/down on Base and Media, down/up arrows on Navigation, and wheel scroll on other layers. The direct GPIO encoder press on B2 is initialized with an internal pull-up but currently has no assigned key action because the hardware path can produce phantom clicks.
   - Encoder rotation actions suppress haptic feedback.
   - Base-layer Q/Z and comma/dot are intentionally swapped, including the custom Finnish Auto Shift behavior for comma and dot.
-  - Scroll-hold activation is userspace-managed in users/fleetsing/pointing.c; sensor DPI remains owned by the Charybdis firmware keycodes and config.
+  - Navigation-layer and Auto Mouse drag-scroll activation is userspace-managed in users/fleetsing/pointing.c and users/fleetsing/fleetsing.c; sensor DPI remains owned by the Charybdis firmware keycodes and config.
   - QK_REP and QK_AREP use QMK core repeat-key handling directly; there is no userspace repeat module in the current snapshot.
   - There is no active tap-dance definition in the current keymap snapshot.
   - qmk_userspace/users/fleetsing/config.h exists and is currently only a placeholder.
   - The custom board target is bastardkb/charybdis/3x5/fleetsing36.
   - qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/config.h now enables EE_HANDS, so physical left/right identity is persistent per half instead of following the USB side.
   - After enabling EE_HANDS on this board, flash the halves with side-specific handedness once: use `qmk flash -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing -bl uf2-split-left` for the left half and `... -bl uf2-split-right` for the right half.
+  - The fleetsing36 hardware currently has no installed backlight, underglow, or per-key LEDs. Its custom board `keyboard.json` keeps RGB Matrix disabled, while stock 3x5 RGB metadata now lives in `qmk_firmware/keyboards/bastardkb/charybdis/3x5/elitec/keyboard.json` and `.../blackpill/keyboard.json`; `SPLIT_LED_STATE_ENABLE` remains in the keymap only for host Num/Caps/Scroll state shown on the OLED.
   - The inherited parent layout metadata in qmk_firmware/keyboards/bastardkb/charybdis/3x5/info.json has been aligned with the 36-key custom board layout. If a future layout-count warning appears, verify both inherited and custom keyboard metadata before assuming the userspace keymap is wrong.
-  - The current parent-file footprint is intentionally small: qmk_firmware/keyboards/bastardkb/charybdis/3x5/info.json has a layout metadata fix for the extra thumb key, and qmk_firmware/keyboards/bastardkb/charybdis/charybdis.c reapplies CPI after synced config updates so sniping/drag-scroll state affects the receiving half.
+  - The current parent-file footprint is intentionally small: qmk_firmware/keyboards/bastardkb/charybdis/3x5/info.json holds the shared 36-key layout metadata without the stock RGB Matrix block, and qmk_firmware/keyboards/bastardkb/charybdis/charybdis.c reapplies CPI after synced config updates so sniping/drag-scroll state affects the receiving half.
   - The current working replacement OLED batch uses `OLED_IC_SSD1312` with `OLED_DISPLAY_128X64` in the keymap config, not the older `SH1107` `64x128` profile used by the original BastardKB modules.
   - Correct rendering for that replacement OLED batch also depends on local driver patches in qmk_firmware/drivers/oled/oled_driver.h and qmk_firmware/drivers/oled/oled_driver.c. The final working `SSD1312 + OLED_ROTATION_90` path uses left-to-right target tiles, `rotate_270(...)` per tile, and reversed byte-row order within each rotated tile.
   - Right-side OLED change overlays are synced from the master but use fleetsing_local_overlay_is_active() when packaging the sync state, so stale overlay_active state should not keep the right OLED stuck on an expired "Changed" card.

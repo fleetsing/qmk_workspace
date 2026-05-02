@@ -65,7 +65,7 @@ For this build, QMK uses the Elite-C-style aliases, then `CONVERT_TO = rp2040_ce
 | Feature | QMK pin(s) | RP2040 GPIO | BastardKB / PCB label | Current status |
 | --- | --- | --- | --- | --- |
 | Split serial transport | `D2` | `GP1` | `Serial` | In use |
-| RGB data | `D3` | `GP0` | `RGB` | In use |
+| Future RGB data | `D3` | `GP0` | `RGB` | Not installed; RGB Matrix disabled |
 | I2C SDA | `D1` | `GP2` | none documented on Splinktegrated page | In use |
 | I2C SCL | `D0` | `GP3` | none documented on Splinktegrated page | In use |
 | OLED bus | `D1`, `D0` | `GP2`, `GP3` | 4-pin OLED header, `SDA` / `SCL` | In use |
@@ -91,7 +91,7 @@ If the goal is "what is the easiest place to steal a pin for the next mod?", use
 | --- | --- | --- |
 | Best keyboard-side free nets | `F4` / `GP29` / `R1`, `F6` / `GP27` / `C1` | Already have BastardKB matrix-side naming and are unused by the Nano |
 | Best controller-only free pads | `B7` / `GP12`, `D5` / `GP13`, `C7` / `GP14`, `F1` / `GP15` | Free in the current controller mapping, but likely require direct controller soldering |
-| Do not steal casually | `D0`, `D1`, `D2`, `D3` | I2C, split serial, RGB |
+| Do not steal casually | `D0`, `D1`, `D2`, `D3` | I2C, split serial, future RGB |
 | Do not steal casually | `F0`, `B1`, `B2`, `B3` | Right trackball CS plus the current left encoder/press wiring |
 | Do not steal casually | `F5`, `B6`, `D7`, `E6`, `B4`, `F7`, `C6`, `D4`, `B5` | Active matrix nets |
 
@@ -103,7 +103,7 @@ This section follows the exact grouping and order used by `elite_c_to_rp2040_ce/
 
 | Physical group order | QMK | RP2040 | Current use |
 | --- | --- | --- | --- |
-| 1 | `D3` | `GP0` | RGB |
+| 1 | `D3` | `GP0` | Future RGB, not installed |
 | 2 | `D2` | `GP1` | Split serial |
 | 3 | `D1` | `GP2` | I2C SDA |
 | 4 | `D0` | `GP3` | I2C SCL |
@@ -308,7 +308,7 @@ That matches the BastardKB `Serial` pin on the Splinktegrated pin table and the 
 In practice for this build:
 
 - `D2` / `GP1` is a used split-transport pin
-- `D3` / `GP0` is the RGB data pin
+- `D3` / `GP0` is the future RGB data pin, but RGB LEDs are not currently installed and RGB Matrix is disabled in the custom board rules.
 
 ## Current mod-specific notes
 
@@ -417,7 +417,7 @@ These are currently unused in this build, but they are less convenient because t
 
 | QMK / GPIO | Why not free |
 | --- | --- |
-| `D3` / `GP0` | RGB |
+| `D3` / `GP0` | Future RGB, not installed |
 | `D2` / `GP1` | Split serial |
 | `D1` / `GP2` | I2C SDA |
 | `D0` / `GP3` | I2C SCL |
@@ -468,7 +468,7 @@ High confidence:
 
 - matrix rows and columns
 - split serial
-- RGB
+- future RGB data pin identity
 - SPI signal mapping
 - current encoder and knob-press pins
 - free `F4` / `F6` as unused Splinktegrated row/column nets
