@@ -1,12 +1,12 @@
 # QMK workspace repo refs
-Generated: 2026-04-07T12:05:08Z
+Generated: 2026-09-18T04:50:51Z
 
 [qmk_firmware]
 branch=boards/fleetsing36
-commit=76abc50f014c4b7bd4a00a6ad413fb1ed048a373
+commit=4a0d560e5a018d4560d73b881edc8a3054b513ee
 origin=https://github.com/fleetsing/qmk_firmware.git
 
 [qmk_userspace]
 branch=dev
-commit=93b5ad3ffaf96614c585da220e2b4ea756450ab9
+commit=415396db7d0379c0c79ca7c589c3b5200b50e753
 origin=https://github.com/fleetsing/qmk_userspace.git

@@ -88,6 +88,7 @@ ownership_rules:
     - layers, combos, tap dance, repeat keys, caps word, display, pointing, and haptics behavior
 
 gotchas:
+  - "qmk_firmware boards/fleetsing36 was rebased onto upstream qmk/qmk_firmware master (tip as of 2026-09-05, commit 08c662f286) on 2026-09-18 to pick up a retro-tapping mod-unregister fix and new SPECULATIVE_HOLD_ONE_KEY/SPECULATIVE_HOLD_FLOW_TERM tap-hold options relevant to this keymap's tuning. Rebase was clean (no conflicts, no bastardkb/OLED driver changes upstream) and verified with a full qmk compile. History was rewritten, so origin/boards/fleetsing36 needs a force-push (git push --force-with-lease origin boards/fleetsing36) to catch up; local commit is now 4a0d560e5a018d4560d73b881edc8a3054b513ee. See docs/repo-refs.txt for the pinned commit."
   - Generic hook dispatch now lives in qmk_userspace/users/fleetsing/fleetsing.c, with pointing/layer-state handling in qmk_userspace/users/fleetsing/pointing.c.
   - Charybdis 3x5 layout-specific positional aliases, combos, and Auto Shift behavior now live under qmk_userspace/users/fleetsing/layouts/charybdis_3x5/.
   - Combo definitions live in qmk_userspace/users/fleetsing/layouts/charybdis_3x5/combos.def and are included by the keymap so QMK keymap introspection can still see key_combos.
