@@ -73,7 +73,7 @@ build_targets:
 verification:
   overlay_prerequisite: qmk config user.overlay_dir="$(realpath qmk_userspace)"
   primary_compile: qmk compile -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing_qwerty
-  toolchain_note: 'arm-none-eabi-gcc@8 from the osx-cross/arm tap is keg-only and is not on PATH by default. Prefix PATH with /opt/homebrew/opt/arm-none-eabi-gcc@8/bin:/opt/homebrew/opt/arm-none-eabi-binutils/bin before compiling, or the build fails with "arm-none-eabi-gcc: command not found".'
+  toolchain_note: 'arm-none-eabi-gcc@8 from the osx-cross/arm tap is keg-only. The chezmoi-managed ~/.zshenv (source in ~/Projects/dotfiles) adds it and arm-none-eabi-binutils to PATH for every zsh, and the Brewfile lists it. If a build fails with "arm-none-eabi-gcc: command not found", check that the formula is still installed before touching PATH.'
   primary_compile_note: Currently compiles successfully without the previous RGB Matrix metadata warning; the shared Charybdis 3x5 parent no longer advertises RGB Matrix, stock 3x5 RGB metadata lives in the elitec/blackpill board files, and fleetsing36 keeps RGB Matrix disabled in its custom board metadata because no LEDs are installed.
   userspace_compile: qmk userspace-compile -c -p
   format_changed_c: qmk format-c <changed-files>
