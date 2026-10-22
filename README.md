@@ -39,9 +39,11 @@ The code repositories live alongside this repo as sibling directories:
 ## Current Active Target
 
 - Keyboard: `bastardkb/charybdis/3x5/fleetsing36`
-- Keymap: `fleetsing`
+- Keymap: `fleetsing_qwerty`
 - Primary compile command:
-  `qmk compile -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing`
+  `qmk compile -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing_qwerty`
+- The earlier custom-layout `fleetsing` keymap is archived at the
+  `qmk_userspace` tag `archive/fleetsing-custom-layout`.
 
 ## Workspace Layout
 

@@ -30,8 +30,8 @@ Primary local sources:
 - `qmk_firmware/keyboards/bastardkb/charybdis/config.h`
 - `qmk_firmware/platforms/chibios/converters/elite_c_to_rp2040_ce/_pin_defs.h`
 - `qmk_firmware/platforms/chibios/boards/QMK_PM2040/configs/config.h`
-- `qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing/rules.mk`
-- `qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing/config.h`
+- `qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing_qwerty/rules.mk`
+- `qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing_qwerty/config.h`
 - `qmk_userspace/users/fleetsing/fleetsing.c`
 
 External cross-checks:
@@ -290,7 +290,7 @@ Why this matters:
 
 Local files that now encode the working OLED path:
 
-- `qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing/config.h`
+- `qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing_qwerty/config.h`
 - `qmk_firmware/drivers/oled/oled_driver.h`
 - `qmk_firmware/drivers/oled/oled_driver.c`
 

@@ -26,7 +26,7 @@ description: Use for analyzing, debugging, or modifying this QMK workspace for t
 9. Make the smallest change that cleanly solves the task.
 10.  Verification policy:
     - For userspace/overlay problems, start with `qmk userspace-doctor`
-    - For normal keymap or board work, prefer `qmk compile -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing`
+    - For normal keymap or board work, prefer `qmk compile -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing_qwerty`
     - For shared or broad userspace changes, use `qmk userspace-compile -c -p` when practical
     - Run `qmk format-c` on changed C files when appropriate
 11. In the final response, always include:

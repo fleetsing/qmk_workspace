@@ -33,7 +33,7 @@ Use this `AGENTS.md` for policy, repository ownership, and editing expectations.
 ## Workspace Map
 
 - Custom board definition: `qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/`
-- Active userspace keymap: `qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing/`
+- Active userspace keymap: `qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing_qwerty/`
 - Shared userspace code: `qmk_userspace/users/fleetsing/`
 - Userspace build target file: `qmk_userspace/qmk.json`
 - Additional workspace context: `docs/qmk-context.yaml`

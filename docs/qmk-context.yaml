@@ -35,12 +35,12 @@ userspace:
   qmk_json: qmk_userspace/qmk.json
   keymap:
     keyboard: bastardkb/charybdis/3x5/fleetsing36
-    keymap: fleetsing
-    path: qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing
+    keymap: fleetsing_qwerty
+    path: qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing_qwerty
     files:
-      - qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing/keymap.c
-      - qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing/config.h
-      - qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing/rules.mk
+      - qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing_qwerty/keymap.c
+      - qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing_qwerty/config.h
+      - qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing_qwerty/rules.mk
   shared_user:
     name: fleetsing
     path: qmk_userspace/users/fleetsing
@@ -52,6 +52,7 @@ userspace:
       - qmk_userspace/users/fleetsing/display.c
       - qmk_userspace/users/fleetsing/haptics.c
       - qmk_userspace/users/fleetsing/rules.mk
+      - qmk_userspace/users/fleetsing/layouts/charybdis_3x5/layout_positions_qwerty.h
       - qmk_userspace/users/fleetsing/layouts/charybdis_3x5/layout_positions.h
       - qmk_userspace/users/fleetsing/layouts/charybdis_3x5/combos.def
       - qmk_userspace/users/fleetsing/layouts/charybdis_3x5/fi_autoshift.c
@@ -61,13 +62,18 @@ userspace:
 
 build_targets:
   - keyboard: bastardkb/charybdis/3x5/fleetsing36
-    keymap: fleetsing
+    keymap: fleetsing_qwerty
     status: active
     note: This is the primary keymap for this userspace. It is present in qmk.json and has a matching keymap folder in this userspace snapshot. Treat qmk.json as the source of truth even if historical .hex or .uf2 artifacts for other targets exist in the repo root.
+  - keyboard: bastardkb/charybdis/3x5/fleetsing36
+    keymap: fleetsing
+    status: archived
+    note: The earlier custom (non-QWERTY) layout keymap. Removed from dev and qmk.json on 2026-10-22; its final state is at the qmk_userspace tag archive/fleetsing-custom-layout. layout_positions.h and the FLEETSING_LAYOUT_QWERTY selector in fi_autoshift.c were kept, so restoring only needs `git checkout archive/fleetsing-custom-layout -- keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing` plus the qmk.json entry. Do not treat it as buildable from dev.
 
 verification:
   overlay_prerequisite: qmk config user.overlay_dir="$(realpath qmk_userspace)"
-  primary_compile: qmk compile -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing
+  primary_compile: qmk compile -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing_qwerty
+  toolchain_note: 'arm-none-eabi-gcc@8 from the osx-cross/arm tap is keg-only and is not on PATH by default. Prefix PATH with /opt/homebrew/opt/arm-none-eabi-gcc@8/bin:/opt/homebrew/opt/arm-none-eabi-binutils/bin before compiling, or the build fails with "arm-none-eabi-gcc: command not found".'
   primary_compile_note: Currently compiles successfully without the previous RGB Matrix metadata warning; the shared Charybdis 3x5 parent no longer advertises RGB Matrix, stock 3x5 RGB metadata lives in the elitec/blackpill board files, and fleetsing36 keeps RGB Matrix disabled in its custom board metadata because no LEDs are installed.
   userspace_compile: qmk userspace-compile -c -p
   format_changed_c: qmk format-c <changed-files>
@@ -88,25 +94,27 @@ ownership_rules:
     - layers, combos, tap dance, repeat keys, caps word, display, pointing, and haptics behavior
 
 gotchas:
-  - "qmk_firmware boards/fleetsing36 was rebased onto upstream qmk/qmk_firmware master (tip as of 2026-09-05, commit 08c662f286) on 2026-09-18 to pick up a retro-tapping mod-unregister fix and new SPECULATIVE_HOLD_ONE_KEY/SPECULATIVE_HOLD_FLOW_TERM tap-hold options relevant to this keymap's tuning. Rebase was clean (no conflicts, no bastardkb/OLED driver changes upstream) and verified with a full qmk compile. History was rewritten, so origin/boards/fleetsing36 needs a force-push (git push --force-with-lease origin boards/fleetsing36) to catch up; local commit is now 4a0d560e5a018d4560d73b881edc8a3054b513ee. See docs/repo-refs.txt for the pinned commit."
+  - "qmk_firmware boards/fleetsing36 was rebased onto upstream qmk/qmk_firmware master (tip as of 2026-09-05, commit 08c662f286) on 2026-09-18 to pick up a retro-tapping mod-unregister fix and new SPECULATIVE_HOLD_ONE_KEY/SPECULATIVE_HOLD_FLOW_TERM tap-hold options relevant to this keymap's tuning. Rebase was clean (no conflicts, no bastardkb/OLED driver changes upstream) and verified with a full qmk compile. History was rewritten and origin/boards/fleetsing36 has since been force-pushed to the rebased commit 4a0d560e5a018d4560d73b881edc8a3054b513ee. See docs/repo-refs.txt for the pinned commit."
   - Generic hook dispatch now lives in qmk_userspace/users/fleetsing/fleetsing.c, with pointing/layer-state handling in qmk_userspace/users/fleetsing/pointing.c.
   - Charybdis 3x5 layout-specific positional aliases, combos, and Auto Shift behavior now live under qmk_userspace/users/fleetsing/layouts/charybdis_3x5/.
   - Combo definitions live in qmk_userspace/users/fleetsing/layouts/charybdis_3x5/combos.def and are included by the keymap so QMK keymap introspection can still see key_combos.
   - Shared enums and custom keycodes SET_MS_L and SET_MS_R live in users/fleetsing/fleetsing.h.
   - Thumb holds currently map L43 and R43 to Navigation, L41 to Numbers, R42 to Function, and R41 to Media.
   - Holding both Navigation thumbs, L43 + R43, promotes to Symbols through userspace physical-thumb tracking; holding L41 + R41 promotes to Macro through the Numbers + Media tri-layer.
-  - Navigation layer enables Charybdis drag-scroll from users/fleetsing/pointing.c. Base-layer Meh/Hyper mod-taps live on the lower row: L33/M is Meh, L32/P is Hyper, R32/comma is Hyper, and R33/Ä is Meh. Auto Mouse exposes right-hand one-handed pointer controls with R31/dot as right click, R32/comma as left click, and R33/Ä as drag-scroll hold; its timeout keeps the layer active for about 5 seconds after trackball movement stops.
+  - Navigation layer enables Charybdis drag-scroll from users/fleetsing/pointing.c. Base-layer Meh/Hyper mod-taps live on the lower row: L33/C is Meh, L32/V is Hyper, R32/M is Hyper, and R33/comma is Meh. Auto Mouse exposes right-hand one-handed pointer controls with R31/N as right click, R32/M as left click, and R33/comma as drag-scroll hold; its timeout keeps the layer active for about 5 seconds after trackball movement stops.
   - Vertical drag-scroll is inverted with CHARYBDIS_DRAGSCROLL_REVERSE_Y in the keymap config so physical trackball up scrolls up and physical down scrolls down.
   - The left encoder sends volume up/down on Base and Media, down/up arrows on Navigation, and wheel scroll on other layers. The direct GPIO encoder press on B2 is initialized with an internal pull-up but currently has no assigned key action because the hardware path can produce phantom clicks.
   - Encoder rotation actions suppress haptic feedback.
-  - Base-layer Q/Z and comma/dot are intentionally swapped, including the custom Finnish Auto Shift behavior for comma and dot.
+  - The base layer is a QWERTY arrangement adapted to 3x5 (layout_positions_qwerty.h). Right row 2 is H J K L Ö and right row 3 is N M comma dot Ä; every mod-tap and layer-tap role stays pinned to its physical position, not to a letter. fleetsing_qwerty's config.h defines FLEETSING_LAYOUT_QWERTY so the shared fi_autoshift.c includes the matching positions header.
+  - The dot/comma Auto Shift overrides (dot -> "!", comma -> "?") follow the character via _FLEETSING_DOT_POS and _FLEETSING_COMMA_POS, which each layout_positions*.h points at its own positions. Do not hardcode _R31/_R32 in fi_autoshift.c.
+  - 'Symbol combos are same-finger vertical pairs. Bracket pairs are split across hands (openers on left middle finger, closers on right middle finger); the left hand otherwise holds operators (- _ + = / * % and @ ^ € $) and the right hand holds quoting and colon ('' " : ;) plus & # | ~ `. Each combo is identified by its raw output keycode in fi_autoshift.c, so moving a combo is a combos.def-only change, while changing its tap/hold glyphs also needs the fi_autoshift.c mapping and, for a new keycode, the FLEETSING_SYMBOL_COMBO_KEYCODE_CASES list in fleetsing.h.'
   - Navigation-layer and Auto Mouse drag-scroll activation is userspace-managed in users/fleetsing/pointing.c and users/fleetsing/fleetsing.c; sensor DPI remains owned by the Charybdis firmware keycodes and config.
   - QK_REP and QK_AREP use QMK core repeat-key handling directly; there is no userspace repeat module in the current snapshot.
   - There is no active tap-dance definition in the current keymap snapshot.
   - qmk_userspace/users/fleetsing/config.h exists and is currently only a placeholder.
   - The custom board target is bastardkb/charybdis/3x5/fleetsing36.
   - qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/config.h now enables EE_HANDS, so physical left/right identity is persistent per half instead of following the USB side.
-  - After enabling EE_HANDS on this board, flash the halves with side-specific handedness once: use `qmk flash -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing -bl uf2-split-left` for the left half and `... -bl uf2-split-right` for the right half.
+  - After enabling EE_HANDS on this board, flash the halves with side-specific handedness once: use `qmk flash -kb bastardkb/charybdis/3x5/fleetsing36 -km fleetsing_qwerty -bl uf2-split-left` for the left half and `... -bl uf2-split-right` for the right half.
   - The fleetsing36 hardware currently has no installed backlight, underglow, or per-key LEDs. Its custom board `keyboard.json` keeps RGB Matrix disabled, while stock 3x5 RGB metadata now lives in `qmk_firmware/keyboards/bastardkb/charybdis/3x5/elitec/keyboard.json` and `.../blackpill/keyboard.json`; `SPLIT_LED_STATE_ENABLE` remains in the keymap only for host Num/Caps/Scroll state shown on the OLED.
   - The inherited parent layout metadata in qmk_firmware/keyboards/bastardkb/charybdis/3x5/info.json has been aligned with the 36-key custom board layout. If a future layout-count warning appears, verify both inherited and custom keyboard metadata before assuming the userspace keymap is wrong.
   - The current parent-file footprint is intentionally small: qmk_firmware/keyboards/bastardkb/charybdis/3x5/info.json holds the shared 36-key layout metadata without the stock RGB Matrix block, and qmk_firmware/keyboards/bastardkb/charybdis/charybdis.c reapplies CPI after synced config updates so sniping/drag-scroll state affects the receiving half.
@@ -125,5 +133,5 @@ gotchas:
 local_doc_priority:
   - qmk_firmware/docs/
   - qmk_firmware/keyboards/bastardkb/charybdis/3x5/fleetsing36/
-  - qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing/
+  - qmk_userspace/keyboards/bastardkb/charybdis/3x5/fleetsing36/keymaps/fleetsing_qwerty/
   - qmk_userspace/users/fleetsing/
